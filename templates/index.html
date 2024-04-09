@@ -1,0 +1,37 @@
+<!-- BOOTSTRAP HEADER -->
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="full bg-info container-fluid flex-column d-flex justify-content-center">
+    <div class="card text-white mx-auto mt-5 mb-3" style="max-width: 350px">
+        <img src="/static/au_logo.png" alt="Alaska University logo">
+        <h3 class="card-header bg-new">Admissions Portal</h3>
+        <div class="card-body">
+            <form action="/" method="post" >
+                <div class="text-info mb-3">
+                    <label for="username" class="col-form-label">Username</label>
+                    <div>
+                        <input type="text" class="form-control" placeholder="alaska" name="username" id="username" value="{{request.form.username}}">
+                    </div>
+                </div>
+                <div class="text-info mb-3">
+                    <label for="password" class="col-form-label">Password</label>
+                    <div>
+                        <input type="password" class="form-control" placeholder="university" name="password" id="password" value="{{request.form.username}}">
+                    </div>
+                </div>
+                <div>
+                    <button type="submit" class="btn btn-new">Submit</button>
+                </div>
+            </form>
+            {% if error %}
+                <p class="error"><strong>Error:</strong> {{ error }}
+            {% endif %}
+        </div>
+        <div class="card-footer bg-new"></div>
+    </div>
+</div>
+
+<!-- BOOTSTRAP FOOTER -->
+{% endblock %}
+

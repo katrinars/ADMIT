@@ -31,13 +31,19 @@ def predict():
         cgpa = float(request.form.get('cgpa'))
         sop = float(request.form.get('sop'))
 
+
+        # Scale the values
+        scores = (gre, cgpa, sop)
+        sc_scores = model.sc.transform([scores])
+
+
         # Use the model to make a prediction
-        prediction = model.log_model.predict([[gre, cgpa, sop]])
+        prediction = model.log_model.predict(sc_scores)
         if prediction[0] == 0:
             prediction = 'Reject'
         else:
             prediction = 'Admit'
-        probability = model.log_model.predict_proba([[gre, cgpa, sop]])
+        probability = model.log_model.predict_proba(sc_scores)
 
         # Return the prediction
         return f'DECISION = {prediction} - Rating: {probability[0][1] * 100:.2f}% chance'

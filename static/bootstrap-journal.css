@@ -593,6 +593,7 @@ output {
 
 iframe {
   border: 0;
+  height: 98%;
 }
 
 summary {
@@ -731,6 +732,10 @@ progress {
   border-radius: var(--bs-border-radius);
   max-width: 100%;
   height: auto;
+}
+
+.iframe {
+  height: 100%;
 }
 
 .figure {

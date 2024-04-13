@@ -9,14 +9,14 @@
         <div class="sidenav text-info">
             <h1 class="text-center">ALASKA UNIVERSITY ADMISSIONS</h1>
             <br><br>
-            <div style="height: 25%">
+            <div class="iframe" style="height: 30%">
                 <h2 class="text-center">UPLOAD APPLICANTS</h2>
                 <iframe src="{{ url_for('upload') }}" style="background: transparent"></iframe>
             </div>
             <br><br>
             <div style="height: 35%">
                 <h2 class="text-center">GENERATE DECISION</h2>
-                <iframe src="{{ url_for('predict') }}" style="background: transparent; height: 100%"></iframe>
+                <iframe class="iframe" src="{{ url_for('predict') }}" style="background: transparent; height: 100%"></iframe>
             </div>
         </div>
         <!-- DASHBOARD -->

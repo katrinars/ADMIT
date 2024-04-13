@@ -1,5 +1,4 @@
 from flask import Flask, render_template, request
-from sklearn.preprocessing import StandardScaler
 
 import model
 import pandas as pd
@@ -64,10 +63,11 @@ def upload():
         # apply logistic regression model and insert decisions into dataframe
         decisions = model.log_model.predict(X)
         new_data.insert(4, 'decision', decisions)
+        results = new_data.to_html(index=False, classes='table table-stripped', header=True, escape=False)
 
 
-        # Return a success message
-        return {new_data.to_html(index=False)}
+        # Return table with decisions
+        return results
     else:
         # Render the form
         return render_template('upload.html')

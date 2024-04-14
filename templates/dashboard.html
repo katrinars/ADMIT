@@ -3,65 +3,76 @@
 
 {% block content %}
 
-<!-- DASHBOARD -->
-<div class="full bg-info container-fluid flex-column d-flex justify-content-center table-responsive mx-auto mt-5 mb-3">
+    <div class="flex-container">
 
-    <table class="table table-hover" style="width: 100%; height: 33%; border-style: double">
-      <thead>
-        <tr>
-          <th scope="col">VISUAL 1</th>
-          <th scope="col">VISUAL 2</th>
-          <th scope="col">VISUAL 3</th>
-          <th scope="col">VISUAL 4</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr class="table-active">
-          <th scope="row">insert chart</th>
-          <th scope="row">insert chart</th>
-          <th scope="row">insert chart</th>
-          <th scope="row">insert chart</th>
-        </tr>
-      </tbody>
-    </table>
-    <table class="table table-hover" style="width: 100%; height: 33%; border-style: double">
-      <thead>
-        <tr>
-          <th scope="col">VISUAL 1</th>
-          <th scope="col">VISUAL 2</th>
-          <th scope="col">VISUAL 3</th>
-          <th scope="col">VISUAL 4</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr class="table-active">
-          <th scope="row">insert chart</th>
-          <th scope="row">insert chart</th>
-          <th scope="row">insert chart</th>
-          <th scope="row">insert chart</th>
-        </tr>
-      </tbody>
-    </table>
-    <table class="table table-hover" style="width: 100%; height: 33%; border-style: double">
-      <thead>
-        <tr>
-          <th scope="col">VISUAL 1</th>
-          <th scope="col">VISUAL 2</th>
-          <th scope="col">VISUAL 3</th>
-          <th scope="col">VISUAL 4</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr class="table-active">
-          <th scope="row">insert chart</th>
-          <th scope="row">insert chart</th>
-          <th scope="row">insert chart</th>
-          <th scope="row">insert chart</th>
-        </tr>
-      </tbody>
-    </table>
+        <!-- SIDEBAR -->
+        <div class="sidenav text-info">
+            <h1 class="text-center">ALASKA UNIVERSITY ADMISSIONS</h1>
+            <br><br>
+            <div class="iframe" style="height: 30%">
+                <h2 class="text-center">UPLOAD APPLICANTS</h2>
+                <iframe src="{{ url_for('upload') }}" style="background: transparent"></iframe>
+            </div>
+            <br><br>
+            <div style="height: 35%">
+                <h2 class="text-center">GENERATE DECISION</h2>
+                <iframe class="iframe" src="{{ url_for('predict') }}" style="background: transparent; height: 100%"></iframe>
+            </div>
+        </div>
+        <!-- DASHBOARD -->
+        <div class="main full bg-info-subtle container-fluid flex-column d-flex justify-content-center table-responsive mt-2">
 
-</div>
+            <table class="table table-hover border-info-subtle" style="height: 33%; border-style: double">
+                <thead>
+                <tr>
+                    <th scope="col">VISUAL 1</th>
+                    <th scope="col">VISUAL 2</th>
+                    <th scope="col">VISUAL 3</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr class="table-active">
+                    <th scope="row">insert chart</th>
+                    <th scope="row">insert chart</th>
+                    <th scope="row">insert chart</th>
+                </tr>
+                </tbody>
+            </table>
+            <table class="table table-hover border-info-subtle" style="height: 33%; border-style: double">
+                <thead>
+                <tr>
+                    <th scope="col">VISUAL 1</th>
+                    <th scope="col">VISUAL 2</th>
+                    <th scope="col">VISUAL 3</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr class="table-active">
+                    <th scope="row">insert chart</th>
+                    <th scope="row">insert chart</th>
+                    <th scope="row">insert chart</th>
+                </tr>
+                </tbody>
+            </table>
+            <table class="table table-hover border-info-subtle" style="height: 33%; border-style: double">
+                <thead>
+                <tr>
+                    <th scope="col">VISUAL 1</th>
+                    <th scope="col">VISUAL 2</th>
+                    <th scope="col">VISUAL 3</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr class="table-active">
+                    <th scope="row">insert chart</th>
+                    <th scope="row">insert chart</th>
+                    <th scope="row">insert chart</th>
+                </tr>
+                </tbody>
+            </table>
 
+        </div>
+
+    </div>
 
 {% endblock %}

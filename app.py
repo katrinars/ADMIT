@@ -43,15 +43,9 @@ def upload():
         decisions = model.log_model.predict(X)
         new_data.insert(4, 'decision', decisions)
 
+        # save new data to csv and display dashboard
         new_data.to_csv('static/new_data.csv', index=False)
-
-        # regenerate charts using new data
-        scatterplot(new_data)
-        decision_pie(new_data)
-        gre_hist(new_data)
-        cgpa_hist(new_data)
-        sop_hist(new_data)
-        correlation_matrix(new_data)
+        dashboard()
 
         return render_template('upload.html')
 
@@ -86,6 +80,27 @@ def predict():
         return render_template('predict.html')
 
 
+
+
+@app.route('/dashboard', methods=['GET', 'POST'])
+def dashboard():
+    # load new data if available, otherwise use historic data
+    try:
+        df = pd.read_csv('static/new_data.csv')
+    except FileNotFoundError:
+        df = pd.read_csv('static/au_admissions.csv')
+
+    # refresh dashboard visuals using data found
+    scatterplot(df)
+    decision_pie(df)
+    gre_hist(df)
+    cgpa_hist(df)
+    sop_hist(df)
+    correlation_matrix(df)
+    matplotlib.pyplot.close('all')
+    plt.close('all')
+
+
 @app.route('/scatterplot', methods=['GET', 'POST'])
 def scatterplot(df):
     # set figure size, return decisions as string
@@ -99,14 +114,16 @@ def scatterplot(df):
     # create scatterplot matrix and customize legend
     ax = sns.pairplot(df.drop(columns='applicant no.'), height=3, kind="scatter", hue='decision', corner=True, )
     ax.legend.remove()
-    plt.legend(title='Decision', loc='upper right', bbox_to_anchor=(0.7, 2.3), labels=['admit', 'reject'], fontsize='x-large', facecolor='w', edgecolor='gray')
+    plt.legend(loc='upper right', bbox_to_anchor=(0.7, 2.3), labels=['admit', 'reject'], fontsize='x-large', facecolor='w', edgecolor='gray')
 
     # save plot and close
     plt.savefig('static/scatterplot.png', transparent=True)
     plt.draw()
     plt.close()
+    splot = 'static/scatterplot.png'
 
-    return render_template('dashboard.html')
+    return splot
+
 
 
 @app.route('/correlation', methods=['GET', 'POST'])
@@ -121,9 +138,9 @@ def correlation_matrix(df):
     plt.savefig('static/correlation.png', transparent=True)
     plt.draw()
     plt.close()
+    correlation = 'static/correlation.png'
 
-
-    return render_template('dashboard.html')
+    return correlation
 
 
 @app.route('/decision_pie', methods=['GET', 'POST'])
@@ -169,8 +186,9 @@ def decision_pie(df):
     plt.savefig('static/decision_pie.png', transparent=True)
     plt.draw()
     plt.close()
+    pie = 'static/decision_pie.png'
 
-    return render_template('dashboard.html', pie_url='static/decision_pie.png')
+    return pie
 
 
 @app.route('/gre_hist', methods=['GET', 'POST'])
@@ -200,8 +218,9 @@ def gre_hist(df):
     plt.savefig('static/gre_hist.png', transparent=True)
     plt.draw()
     plt.close()
+    hist_gre = 'static/gre_hist.png'
 
-    return render_template('dashboard.html', gre_hist='static/gre_hist.png')
+    return hist_gre
 
 
 @app.route('/cgpa_hist', methods=['GET', 'POST'])
@@ -224,8 +243,9 @@ def cgpa_hist(df):
     plt.savefig('static/cgpa_hist.png', transparent=True)
     plt.draw()
     plt.close()
+    hist_cgpa = 'static/cgpa_hist.png'
 
-    return render_template('dashboard.html', cgpa_hist='static/cgpa_hist.png')
+    return hist_cgpa
 
 
 @app.route('/sop_hist', methods=['GET', 'POST'])
@@ -249,41 +269,12 @@ def sop_hist(df):
     plt.savefig('static/sop_hist.png', transparent=True)
     plt.draw()
     plt.close()
+    hist_sop = 'static/sop_hist.png'
 
-    return render_template('dashboard.html', sop_hist='static/sop_hist.png')
-
-
-@app.route('/dashboard', methods=['GET', 'POST'])
-def dashboard():
-    # load new data if available, otherwise use historic data
-    try:
-        df = pd.read_csv('static/new_data.csv')
-    except FileNotFoundError:
-        df = pd.read_csv('static/au_admissions.csv')
-
-    # refresh dashboard visuals using data found
-    scatter = scatterplot(df)
-    pie = decision_pie(df)
-    gre_dist = gre_hist(df)
-    cgpa_dist = cgpa_hist(df)
-    sop_dist = sop_hist(df)
-    correlation = correlation_matrix(df)
-    matplotlib.pyplot.close('all')
-    plt.close('all')
-
-    return render_template('dashboard.html', scatterplot=scatter, pie=pie, gre_hist=gre_dist, cgpa_hist=cgpa_dist,
-                           sop_hist=sop_dist, correlation=correlation)
+    return hist_sop
 
 
 
-@app.route('/sidebar', methods=['GET', 'POST'])
-def sidebar():
-    return render_template('dashboard.html')
-
-
-@app.route('/charts', methods=['GET', 'POST'])
-def charts():
-    return render_template('dashboard.html')
 
 
 if __name__ == '__main__':

@@ -160,7 +160,8 @@ def decision_pie(df):
         horizontalalignment = {-1: "right", 1: "left"}[int(np.sign(x))]
         connectionstyle = f"angle,angleA=0,angleB={ang}"
         kw["arrowprops"].update({"connectionstyle": connectionstyle})
-        ax.annotate(f'{decision_percent['percent'][i]:.1f}%', xy=(x, y), xytext=(1.15 * np.sign(x), 1.2 * y),
+        percent = decision_percent['percent'][i]
+        ax.annotate(f'{percent:.1f}%', xy=(x, y), xytext=(1.15 * np.sign(x), 1.2 * y),
                     horizontalalignment=horizontalalignment, fontsize='small', **kw)
 
     # set plot layout, save, and close

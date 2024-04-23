@@ -10,6 +10,7 @@ from sklearn.model_selection import KFold, cross_val_score
 # import data and print raw dataframe
 url = "./static/au_admissions.csv"
 df = pd.read_csv(url)
+print(df.head())
 
 # %%
 # split data into independent and dependent variables
@@ -23,8 +24,8 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 # %%
 # feature scaling
 sc = StandardScaler()
-X_train = pd.DataFrame(sc.fit_transform(X_train))
-X_test = pd.DataFrame(sc.transform(X_test))
+X_train = pd.DataFrame(sc.fit_transform(X_train.values))
+X_test = pd.DataFrame(sc.transform(X_test.values))
 
 # %%
 # apply logistic regression model

@@ -227,11 +227,13 @@ hr {
 }
 
 h6, .h6, h5, .h5, h4, .h4, h3, .h3, h2, .h2, h1, .h1 {
+  text-align: center;
   margin-top: 0;
   margin-bottom: 0.5rem;
-  font-family: "News Cycle", "Arial Narrow Bold", sans-serif;
-  font-weight: 700;
-  line-height: 1.1;
+  font-family: "Raleway", sans-serif;
+  font-weight: 600;
+  line-height: 1;
+  font-stretch: expanded;
   color: var(--bs-heading-color);
 }
 
@@ -451,6 +453,7 @@ th {
   border-color: inherit;
   border-style: solid;
   border-width: 0;
+  flex-grow: inherit;
 }
 
 label {
@@ -594,6 +597,7 @@ output {
 iframe {
   border: 0;
   height: 98%;
+  background: transparent;
 }
 
 summary {
@@ -723,6 +727,8 @@ progress {
 .img-fluid {
   max-width: 100%;
   height: auto;
+  overflow: visible;
+  overflow-clip-margin: content-box;
 }
 
 .img-thumbnail {
@@ -736,6 +742,8 @@ progress {
 
 .iframe {
   height: 100%;
+  font-family: var(--bs-font-sans-serif);
+  font-size: var(--bs-body-font-size);
 }
 
 .figure {
@@ -813,15 +821,12 @@ progress {
 }
 .row > * {
   flex-shrink: 0;
-  width: 100%;
+  width: auto;
   max-width: 100%;
-  padding-right: calc(var(--bs-gutter-x) * 0.5);
-  padding-left: calc(var(--bs-gutter-x) * 0.5);
-  margin-top: var(--bs-gutter-y);
 }
 
 .col {
-  flex: 1 0 0%;
+  flex: 1 0 0;
 }
 
 .row-cols-auto > * {
@@ -1537,7 +1542,7 @@ progress {
 }
 @media (min-width: 1200px) {
   .col-xl {
-    flex: 1 0 0%;
+    flex: 1 0 0;
   }
   .row-cols-xl-auto > * {
     flex: 0 0 auto;
@@ -3866,11 +3871,11 @@ textarea.form-control-lg {
 }
 
 .nav {
-  --bs-nav-link-padding-x: 1rem;
-  --bs-nav-link-padding-y: 0.5rem;
+  --bs-nav-link-padding-x: .5rem;
+  --bs-nav-link-padding-y: 0.3rem;
   --bs-nav-link-font-weight: ;
-  --bs-nav-link-color: var(--bs-link-color);
-  --bs-nav-link-hover-color: var(--bs-link-hover-color);
+  --bs-nav-link-color: #333;
+  --bs-nav-link-hover-color: #333;
   --bs-nav-link-disabled-color: var(--bs-secondary-color);
   display: flex;
   flex-wrap: wrap;
@@ -3996,6 +4001,11 @@ textarea.form-control-lg {
 .tab-content > .tab-pane {
   display: none;
 }
+
+.tab-content > .tab-pane > .fade{
+  color: #111111;
+}
+
 .tab-content > .active {
   display: block;
 }
@@ -4075,7 +4085,7 @@ textarea.form-control-lg {
 
 .navbar-text {
   padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
+  padding-bottom: 0.2rem;
   color: var(--bs-navbar-color);
 }
 .navbar-text a,
@@ -5832,7 +5842,6 @@ textarea.form-control-lg {
   font-style: normal;
   font-weight: 400;
   line-height: 1.5;
-  text-align: left;
   text-align: start;
   text-decoration: none;
   text-shadow: none;
@@ -5942,7 +5951,6 @@ textarea.form-control-lg {
   font-style: normal;
   font-weight: 400;
   line-height: 1.5;
-  text-align: left;
   text-align: start;
   text-decoration: none;
   text-shadow: none;
@@ -12154,31 +12162,25 @@ iframe[seamless] {
     border: none;
 }
 
-
-/* https://www.w3schools.com/howto/howto_css_fixed_sidebar.asp */
-/* The sidebar menu */
-.sidenav {
-  height: 100%;
-  max-width: 300px; /* Full-height: remove this if you want "auto" height */
-  width: 22%; /* Set the width of the sidebar */
-  position: fixed; /* Fixed Sidebar (stay in place on scroll) */
-  z-index: 1; /* Stay on top */
-  top: 0; /* Stay at the top */
-  left: 0;
-  background-color: #adc2d6;
-  overflow-x: hidden;
-}
-
 /* Style page content */
 .main {
-  margin-left: 300px;
-  position: relative; /* Same as the width of the sidebar */
-  background-color: white;
-  overflow-x: hidden;
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  justify-content: center;
+  overflow: hidden;
+  vertical-align: middle
 }
 
-/* On smaller screens, where height is less than 450px, change the style of the sidebar (less padding and a smaller font size) */
-@media screen and (max-height: 450px) {
-  .sidenav {padding-top: 15px;}
-  .sidenav a {font-size: 18px;}
+
+.aside {
+  width: 30vh;
+  padding-left: 5px;
+  margin-left: 0px;
+  float: left;
 }
+
+ul.nav li.inactive {
+  color: #2d2d2d;
+}
+

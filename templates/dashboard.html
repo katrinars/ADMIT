@@ -3,76 +3,111 @@
 
 {% block content %}
 
-    <div class="flex-container">
-
+    <div class="d-flex bg-info-subtle">
         <!-- SIDEBAR -->
-        <div class="sidenav text-info">
-            <h1 class="text-center">ALASKA UNIVERSITY ADMISSIONS</h1>
+        <div class="aside bg-info text-white d-flex pt-3 pb-4 flex-column">
+            <h2 class="text-center">ALASKA UNIVERSITY ADMISSIONS</h2>
             <br><br>
-            <div class="iframe" style="height: 30%">
-                <h2 class="text-center">UPLOAD APPLICANTS</h2>
-                <iframe src="{{ url_for('upload') }}" style="background: transparent"></iframe>
+            <!-- ADD NEW APPLICANTS -->
+            <div class="flex-grow-1">
+                <h4 class="text-center">Upload Applicants</h4>
+                <br>
+                <iframe src="{{ url_for('upload') }}" onload="refreshCharts()"></iframe>
             </div>
-            <br><br>
-            <div style="height: 35%">
-                <h2 class="text-center">GENERATE DECISION</h2>
-                <iframe class="iframe" src="{{ url_for('predict') }}" style="background: transparent; height: 100%"></iframe>
+            <br>
+            <!-- INDIVIDUAL ADMISSIONS DECISION -->
+            <div class="flex-grow-1">
+                <h4 class="text-center">Get Chance of Acceptance</h4>
+                <iframe class="iframe" src="{{ url_for('predict') }}"></iframe>
             </div>
+            <br>
+            <!-- DOWNLOAD CSV -->
+            <div>
+                <h4 class="text-center">Download Data</h4>
+                <a href="../static/au_admissions.csv" download>
+                    <button type="button" class="btn btn-sm btn-new">Historic Decisions</button>
+                </a>
+                <a href="../static/new_data.csv" download>
+                    <button type="button" class="btn btn-sm btn-new">New Decisions</button>
+                </a>
+            </div>
+            <br>
         </div>
-        <!-- DASHBOARD -->
-        <div class="main full bg-info-subtle container-fluid flex-column d-flex justify-content-center table-responsive mt-2">
-
-            <table class="table table-hover border-info-subtle" style="height: 33%; border-style: double">
-                <thead>
-                <tr>
-                    <th scope="col">VISUAL 1</th>
-                    <th scope="col">VISUAL 2</th>
-                    <th scope="col">VISUAL 3</th>
+        <!-- MAIN DASHBOARD -->
+        <div class="main py-3 bg-info-subtle">
+            <table class="d-flex justify-content-evenly align-content-center bg-info-subtle" >
+                <tr class="row my-3d-flex py-1 flex-row justify-content-evenly overflow-y-hidden" >
+                    <td class="col flex-column col-5 mt-2 me-2">
+                        <!-- SCATTERPLOT -->
+                        <h4>SCORES BY DECISION</h4>
+                        <img src="../static/scatterplot.png" class="img-thumbnail bg-transparent" alt="scatterplot" id="scatterplot">
+                    </td>
+                    <div class="top"></div>
+                    <td class="col col-5 my-3 mx-2" style="max-height: 100%">
+                        <!-- HISTOGRAMS -->
+                        <h4>SCORE DISTRIBUTION</h4>
+                        <div>
+                            <ul class="nav nav-tabs nav-justified text-info-emphasis" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link active" data-bs-toggle="tab" role="tab" tabindex="-1" href="#gre">by GRE</a>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link" data-bs-toggle="tab" role="tab" tabindex="-1" href="#cgpa">by CGPA</a>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link" data-bs-toggle="tab" role="tab" tabindex="-1" href="#sop">by SOP</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="tab-content align-content-center justify-content-evenly" id="histTabs">
+                            <div id="gre" class="tab-pane fade active show" role="tabpanel">
+                                <img src="../static/gre_hist.png" class="img-thumbnail bg-transparent" alt="gre histogram" id="gre_hist">
+                            </div>
+                            <div id="cgpa" class="tab-pane fade" role="tabpanel">
+                                <img src="../static/cgpa_hist.png" class="img-thumbnail bg-transparent" alt="cgpa histogram" id="cgpa_hist">
+                            </div>
+                            <div id="sop" class="tab-pane fade" role="tabpanel">
+                                <img src="../static/sop_hist.png" class="img-thumbnail bg-transparent" alt="sop histogram" id="sop_hist">
+                            </div>
+                        </div>
+                    </td>
                 </tr>
-                </thead>
-                <tbody>
-                <tr class="table-active">
-                    <th scope="row">insert chart</th>
-                    <th scope="row">insert chart</th>
-                    <th scope="row">insert chart</th>
+                <tr class="row my-auto pb-4 d-flex flex-row justify-content-evenly overflow-y-hidden flex-fill" >
+                    <td class="col-5 my-3 mx-2">
+                        <!-- CORRELATION MATRIX -->
+                        <h4>RELATIONSHIPS BETWEEN SCORES AND DECISION</h4>
+                        <img src="../static/correlation.png" class="img-thumbnail bg-transparent" alt="correlation matrix" id="correlation">
+                    </td>
+                    <td class="col flex-column col-5 pb-4">
+                        <!-- PIE CHART -->
+                        <h4>DECISION DISTRIBUTION</h4>
+                        <img src="../static/decision_pie.png" class="img-thumbnail bg-transparent" alt="pie chart" id="pie">
+                    </td>
                 </tr>
-                </tbody>
             </table>
-            <table class="table table-hover border-info-subtle" style="height: 33%; border-style: double">
-                <thead>
-                <tr>
-                    <th scope="col">VISUAL 1</th>
-                    <th scope="col">VISUAL 2</th>
-                    <th scope="col">VISUAL 3</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr class="table-active">
-                    <th scope="row">insert chart</th>
-                    <th scope="row">insert chart</th>
-                    <th scope="row">insert chart</th>
-                </tr>
-                </tbody>
-            </table>
-            <table class="table table-hover border-info-subtle" style="height: 33%; border-style: double">
-                <thead>
-                <tr>
-                    <th scope="col">VISUAL 1</th>
-                    <th scope="col">VISUAL 2</th>
-                    <th scope="col">VISUAL 3</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr class="table-active">
-                    <th scope="row">insert chart</th>
-                    <th scope="row">insert chart</th>
-                    <th scope="row">insert chart</th>
-                </tr>
-                </tbody>
-            </table>
-
         </div>
-
     </div>
+
+
+    <!-- REFRESH DASHBOARD AFTER NEW DATA UPLOAD -->
+    <script>
+        function refreshCharts() {
+            let scatterplot = document.getElementById('scatterplot');
+            let pie = document.getElementById('pie');
+            let gre_hist = document.getElementById('gre_hist');
+            let cgpa_hist = document.getElementById('cgpa_hist');
+            let sop_hist = document.getElementById('sop_hist');
+            let correlation = document.getElementById('correlation')
+            scatterplot.src = '../static/scatterplot.png';
+            pie.src = '../static/decision_pie.png';
+            gre_hist.src = '../static/gre_hist.png';
+            cgpa_hist.src = '../static/cgpa_hist.png';
+            sop_hist.src = '../static/sop_hist.png';
+            correlation.src = '../static/correlation.png';
+            window.location.reload();
+        }
+    </script>
+
+
 
 {% endblock %}

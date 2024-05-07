@@ -1,4 +1,3 @@
-import sklearn
 from flask import Flask, render_template, request
 
 
@@ -18,7 +17,8 @@ sns.set_theme(palette='Pastel1', context='talk', font='sans-serif', font_scale=0
 
 @app.route('/', methods=['GET', 'POST'])
 def login():
-    # https://realpython.com/introduction-to-flask-part-2-creating-a-login-page/
+    # Python, R. (2014, June 6). Discover Flask, Part 2 – Creating a Login Page. Real Python. https://realpython.com/introduction-to-flask-part-2-creating-a-login-page/
+
     error = None
     if request.method == 'POST':
         # display dashboard if login is valid, else display error message
@@ -39,9 +39,9 @@ def upload():
         X = new_data.drop(columns=['applicant no.'])
         X = pd.DataFrame(model.sc.transform(X.values))
 
-        # apply ml model and insert decisions into dataframe
+        # apply ml model and insert admitteds into dataframe
         decisions = model.log_model.predict(X)
-        new_data.insert(4, 'decision', decisions)
+        new_data.insert(4, 'admitted', decisions)
 
         # save new data to csv and display dashboard
         new_data.to_csv('static/new_data.csv', index=False)
@@ -96,7 +96,7 @@ def dashboard():
     gre_hist(df)
     cgpa_hist(df)
     sop_hist(df)
-    correlation_matrix(df)
+    correlation_heatmap(df)
     matplotlib.pyplot.close('all')
     plt.close('all')
 
@@ -104,15 +104,15 @@ def dashboard():
 @app.route('/scatterplot', methods=['GET', 'POST'])
 def scatterplot(df):
     # set figure size, return decisions as string
-    fig, ax = plt.subplots(figsize=(4, 4), linewidth=3, edgecolor='gray')
-    for decision in df['decision']:
+    fig, ax = plt.subplots(figsize=(4, 3), linewidth=3, edgecolor='gray')
+    for decision in df['admitted']:
         if decision == 1:
             decision = 'admit'
         else:
             decision = 'reject'
 
     # create scatterplot matrix and customize legend
-    ax = sns.pairplot(df.drop(columns='applicant no.'), height=3, kind="scatter", hue='decision', corner=True, )
+    ax = sns.pairplot(df.drop(columns='applicant no.'), height=3, kind="scatter", hue='admitted', corner=True, )
     ax.legend.remove()
     plt.legend(loc='upper right', bbox_to_anchor=(0.7, 2.3), labels=['admit', 'reject'], fontsize='x-large', facecolor='w', edgecolor='gray')
 
@@ -127,13 +127,14 @@ def scatterplot(df):
 
 
 @app.route('/correlation', methods=['GET', 'POST'])
-def correlation_matrix(df):
+def correlation_heatmap(df):
     # set figure size, remove applicant number, and create correlation matrix
-    f, ax = plt.subplots(figsize=(6, 4))
+    fig, ax = plt.subplots(figsize=(6, 4))
     scores = df.drop(columns=['applicant no.'])
-    sns.heatmap(scores.corr(), annot=True, cmap='Pastel1', fmt=".2f", linewidths=.7)
+    sns.heatmap(scores.corr(), annot=True, cmap='Pastel1', fmt=".2f", linewidths=.7, cbar_kws={"shrink": .7})
 
     # set plot layout, save, and close
+    plt.yticks(rotation=0)
     plt.tight_layout()
     plt.savefig('static/correlation.png', transparent=True)
     plt.draw()
@@ -145,11 +146,12 @@ def correlation_matrix(df):
 
 @app.route('/decision_pie', methods=['GET', 'POST'])
 def decision_pie(df):
-    # https://matplotlib.org/stable/gallery/pie_and_polar_charts/pie_and_donut_labels.html#sphx-glr-gallery-pie-and-polar-charts-pie-and-donut-labels-py
+    # Labeling a pie and a donut — Matplotlib 3.8.4 documentation. (n.d.). Matplotlib. Retrieved April 24, 2024, from
+    #   https://matplotlib.org/stable/gallery/pie_and_polar_charts/pie_and_donut_labels.html#sphx-glr-gallery-pie-and-polar-charts-pie-and-donut-labels-py
 
     # set figure size and group data by decision string
-    fig, ax = plt.subplots(figsize=(4, 3), subplot_kw=dict(aspect="equal"))
-    decision_percent = pd.DataFrame(df.groupby(by='decision').size() / df['decision'].size) * 100
+    fig, ax = plt.subplots(figsize=(4, 4), subplot_kw=dict(aspect="equal"))
+    decision_percent = pd.DataFrame(df.groupby(by='admitted').size() / df['admitted'].size) * 100
     decision_percent.rename(columns={0: 'percent'}, inplace=True)
     decision = [decision for decision in decision_percent.index]
     decision[0] = 'reject'
@@ -193,18 +195,18 @@ def decision_pie(df):
 
 @app.route('/gre_hist', methods=['GET', 'POST'])
 def gre_hist(df):
-    # https://python-graph-gallery.com/density-mirror/
+    # Holtz, Y. (2022, March 29). Tech and Gaming. The Python Graph Gallery. https://python-graph-gallery.com/density-mirror/
 
     # set figure size and group data by decision
-    fig, ax = plt.subplots(figsize=(4, 4))
-    top = df[df['decision'] == 1]['gre']
-    bottom = df[df['decision'] == 0]['gre'] * -1
+    fig, ax = plt.subplots(figsize=(6, 4))
+    top = df[df['admitted'] == 1]['gre']
+    bottom = df[df['admitted'] == 0]['gre'] * -1
 
     # create top histogram for admitted students
-    sns.histplot(x=top, stat="density", bins=15, edgecolor='gray')
+    sns.histplot(x=top, stat="density", bins=10, edgecolor='gray')
 
     # get density of rejected bins and mirror
-    n_bins = 15
+    n_bins = 10
     heights, bins = np.histogram(bottom, bins=n_bins, density=True)
     heights *= -1
     bin_width = np.diff(bins)[0]
@@ -214,7 +216,7 @@ def gre_hist(df):
     plt.bar(bin_pos, heights, width=bin_width, edgecolor='gray')
 
     # set plot layout, save, and close
-    plt.tight_layout(pad=1.0, w_pad=1.0, h_pad=1.0)
+    plt.tight_layout()
     plt.savefig('static/gre_hist.png', transparent=True)
     plt.draw()
     plt.close()
@@ -225,21 +227,21 @@ def gre_hist(df):
 
 @app.route('/cgpa_hist', methods=['GET', 'POST'])
 def cgpa_hist(df):
-    # https://python-graph-gallery.com/density-mirror/
+    # Holtz, Y. (2022, March 29). Tech and Gaming. The Python Graph Gallery. https://python-graph-gallery.com/density-mirror/
 
-    fig, ax = plt.subplots(figsize=(4, 4))
-    top = df[df['decision'] == 1]['cgpa']
-    bottom = df[df['decision'] == 0]['cgpa'] * -1
+    fig, ax = plt.subplots(figsize=(6, 4))
+    top = df[df['admitted'] == 1]['cgpa']
+    bottom = df[df['admitted'] == 0]['cgpa'] * -1
 
-    sns.histplot(x=top, stat="density", bins=10, edgecolor='gray')
-    n_bins = 10
+    sns.histplot(x=top, stat="density", bins=15, edgecolor='gray')
+    n_bins = 15
     heights, bins = np.histogram(bottom, density=True, bins=n_bins)
     heights *= -1
     bin_width = np.diff(bins)[0]
     bin_pos = (bins[:-1] + bin_width / 2) * -1
     plt.bar(bin_pos, heights, width=bin_width, edgecolor='gray')
 
-    plt.tight_layout(pad=1.0, w_pad=1.0, h_pad=1.0)
+    plt.tight_layout()
     plt.savefig('static/cgpa_hist.png', transparent=True)
     plt.draw()
     plt.close()
@@ -250,12 +252,12 @@ def cgpa_hist(df):
 
 @app.route('/sop_hist', methods=['GET', 'POST'])
 def sop_hist(df):
-    # https://python-graph-gallery.com/density-mirror/
+    # Holtz, Y. (2022, March 29). Tech and Gaming. The Python Graph Gallery. https://python-graph-gallery.com/density-mirror/
 
 
-    fig, ax = plt.subplots(figsize=(4, 4))
-    top = df[df['decision'] == 1]['sop']
-    bottom = df[df['decision'] == 0]['sop'] * -1
+    fig, ax = plt.subplots(figsize=(6, 4))
+    top = df[df['admitted'] == 1]['sop']
+    bottom = df[df['admitted'] == 0]['sop'] * -1
 
     sns.histplot(x=top, stat="density", bins=10, edgecolor='gray')
     n_bins = 10
@@ -265,7 +267,7 @@ def sop_hist(df):
     bin_pos = (bins[:-1] + bin_width / 2) * -1
     plt.bar(bin_pos, heights, width=bin_width, edgecolor='gray')
 
-    plt.tight_layout(pad=1.0, w_pad=1.0, h_pad=1.0)
+    plt.tight_layout()
     plt.savefig('static/sop_hist.png', transparent=True)
     plt.draw()
     plt.close()

@@ -5,6 +5,8 @@
  * Copyright 2012-2024 Thomas Park
  * Licensed under MIT
  * Based on Bootstrap
+
+ * Bootswatch: Journal. (n.d.). Bootswatch. Retrieved April 24, 2024, from https://bootswatch.com/journal/
 */
 /*!
  * Bootstrap  v5.3.3 (https://getbootstrap.com/)
@@ -738,6 +740,7 @@ progress {
   border-radius: var(--bs-border-radius);
   max-width: 100%;
   height: auto;
+
 }
 
 .iframe {
@@ -12176,7 +12179,6 @@ iframe[seamless] {
 .aside {
   width: 30vh;
   padding-left: 5px;
-  margin-left: 0px;
   float: left;
 }
 
@@ -12184,3 +12186,7 @@ ul.nav li.inactive {
   color: #2d2d2d;
 }
 
+.row {
+  overflow: hidden;
+
+}

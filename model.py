@@ -1,56 +1,101 @@
-# import libraries
+import numpy as np
 import pandas as pd
+from matplotlib import pyplot as plt
+import seaborn as sns
+from sklearn.metrics import accuracy_score, f1_score, roc_auc_score, ConfusionMatrixDisplay, RocCurveDisplay
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LogisticRegression
-from sklearn import metrics
-from sklearn.model_selection import KFold, cross_val_score
+from sklearn.linear_model import LogisticRegressionCV
 
 # %%
-# import data and print raw dataframe
-url = "./static/au_admissions.csv"
-df = pd.read_csv(url)
-print(df.head())
+# import data and print dataframe
+data = "./static/university_admission.csv"
+df = pd.read_csv(data)
+df
 
 # %%
-# split data into independent and dependent variables
-X = df.drop(columns=['applicant no.', 'decision'])
-y = pd.DataFrame(df['decision'])
+df.isnull().sum()
+
+#%%
+det = df.describe()
+det
+
+# %%
+# gre boxplot
+fig, ax = plt.subplots()
+gre_box = sns.boxplot(x=df["gre"])
+plt.title("GRE Boxplot")
+plt.show()
+plt.close()
+
+# sop boxplot
+sop_box = sns.boxplot(x=df["sop"])
+plt.title("SOP Boxplot")
+plt.show()
+plt.close()
+
+# cgpa boxplot
+cgpa_box = sns.boxplot(x=df["cgpa"])
+plt.title("CGPA Boxplot")
+plt.show()
+plt.close()
+
+# %%
+# insert applicant no.
+df.insert(0, 'applicant no.', value=np.arange(1, len(df) + 1))
+
+# %%
+# save new dataframe to csv for dashboard
+df.to_csv("./static/au_admissions.csv", index=False)
+
+# %%
+# group independent vs. dependent variables
+X = df.drop(columns=['applicant no.', 'admitted'])
+y = pd.DataFrame(df['admitted'])
+
+# %%
+# scale features
+sc = StandardScaler()
+X = sc.fit_transform(X.values)
 
 # %%
 # split data into training and testing sets
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
 
 # %%
-# feature scaling
-sc = StandardScaler()
-X_train = pd.DataFrame(sc.fit_transform(X_train.values))
-X_test = pd.DataFrame(sc.transform(X_test.values))
+# train model
+y_train_array, y_test_array = y_train['admitted'].values, y_test['admitted'].values
+log_model = LogisticRegressionCV(cv=5, random_state=42, refit=True).fit(X_train, y_train_array)
 
 # %%
-# apply logistic regression model
-y_train_array, y_test_array = y_train['decision'].values, y_test['decision'].values
-log_model = LogisticRegression(random_state=42).fit(X_train, y_train_array)
+# get probabilities
+probabilities = log_model.predict_proba(X_test)
+print(probabilities)
 
 # %%
-# predictions log and accuracy score
-predictions_log = log_model.predict(X_test)
-print(predictions_log)
-score = metrics.accuracy_score(y_test, predictions_log)
-print("Accuracy Score: ", score)
+# get predictions
+predictions = log_model.predict(X_test)
+print(predictions)
 
 # %%
-f1_score = metrics.f1_score(y_test, predictions_log)
-print("F1 Score: ", f1_score)
+# confusion matrix with values as percentages
+cm = ConfusionMatrixDisplay.from_predictions(y_test, predictions, display_labels=['Reject', 'Admit'])
+plt.show()
+plt.close()
 
 # %%
-# apply k-folds cross validation
-y_array = df['decision'].values
-k_folds = KFold(n_splits=5, shuffle=True)
-scores = cross_val_score(log_model, X, y_array)
-print("Split Scores: ", scores)
-print("Average Score: ", scores.mean())
+# get scores
+accuracy = accuracy_score(y_test, predictions)
+f1 = f1_score(y_test, predictions)
+auc_score = roc_auc_score(y_test, predictions)
+
+# print scores with two decimal places
+print(f"Accuracy: {accuracy:.2f}")
+print(f"F1 Score: {f1:.2f}")
+print(f"AUC Score: {auc_score:.2f}")
 
 # %%
-auc_score = metrics.roc_auc_score(y_test, predictions_log)
-print("AUC Score: ", auc_score)
+# plot roc curve
+roc_curve = RocCurveDisplay.from_predictions(y_test, predictions)
+plt.show()
+plt.close()

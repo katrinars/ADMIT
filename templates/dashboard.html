@@ -3,93 +3,88 @@
 
 {% block content %}
 
-    <div class="d-flex bg-info-subtle">
+    <div class="main d-flex bg-info-subtle">
         <!-- SIDEBAR -->
-        <div class="aside bg-info text-white d-flex pt-3 pb-4 flex-column">
-            <h2 class="text-center">ALASKA UNIVERSITY ADMISSIONS</h2>
-            <br><br>
+        <div class="aside bg-info text-white d-flex flex-column pt-2">
+            <h1 class="text-center">ADMIT</h1>
+            <h3>Alaska University Admissions</h3>
+            <br>
             <!-- ADD NEW APPLICANTS -->
             <div class="flex-grow-1">
                 <h4 class="text-center">Upload Applicants</h4>
                 <br>
                 <iframe src="{{ url_for('upload') }}" onload="refreshCharts()"></iframe>
             </div>
-            <br>
             <!-- INDIVIDUAL ADMISSIONS DECISION -->
             <div class="flex-grow-1">
-                <h4 class="text-center">Get Chance of Acceptance</h4>
-                <iframe class="iframe" src="{{ url_for('predict') }}"></iframe>
+                <h4 class="text-center">Likelihood of Admission</h4>
+                <iframe class="iframe" src="{{ url_for('predict') }}" ></iframe>
             </div>
-            <br>
             <!-- DOWNLOAD CSV -->
-            <div>
+            <div class="flex-grow-1">
                 <h4 class="text-center">Download Data</h4>
-                <a href="../static/au_admissions.csv" download>
-                    <button type="button" class="btn btn-sm btn-new">Historic Decisions</button>
-                </a>
-                <a href="../static/new_data.csv" download>
-                    <button type="button" class="btn btn-sm btn-new">New Decisions</button>
-                </a>
+                <div class="d-flex justify-content-center">
+                    <a href="../static/au_admissions.csv" download>
+                        <button type="button" class="btn btn-sm btn-new mx-1">Historic Decisions</button>
+                    </a>
+                    <a href="../static/new_data.csv" download>
+                        <button type="button" class="btn btn-sm btn-new mx-1">New Decisions</button>
+                    </a>
+                </div>
             </div>
-            <br>
         </div>
         <!-- MAIN DASHBOARD -->
-        <div class="main py-3 bg-info-subtle">
-            <table class="d-flex justify-content-evenly align-content-center bg-info-subtle" >
-                <tr class="row my-3d-flex py-1 flex-row justify-content-evenly overflow-y-hidden" >
-                    <td class="col flex-column col-5 mt-2 me-2">
-                        <!-- SCATTERPLOT -->
-                        <h4>SCORES BY DECISION</h4>
-                        <img src="../static/scatterplot.png" class="img-thumbnail bg-transparent" alt="scatterplot" id="scatterplot">
-                    </td>
-                    <div class="top"></div>
-                    <td class="col col-5 my-3 mx-2" style="max-height: 100%">
-                        <!-- HISTOGRAMS -->
-                        <h4>SCORE DISTRIBUTION</h4>
-                        <div>
-                            <ul class="nav nav-tabs nav-justified text-info-emphasis" role="tablist">
-                                <li class="nav-item" role="presentation">
-                                    <a class="nav-link active" data-bs-toggle="tab" role="tab" tabindex="-1" href="#gre">by GRE</a>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <a class="nav-link" data-bs-toggle="tab" role="tab" tabindex="-1" href="#cgpa">by CGPA</a>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <a class="nav-link" data-bs-toggle="tab" role="tab" tabindex="-1" href="#sop">by SOP</a>
-                                </li>
-                            </ul>
+        <div class="container flex-container bg-info-subtle mt-2" id="visuals">
+            <div class="row flex-row mx-3 justify-content-evenly">
+                <div class="col flex-column col-5 mb-1 me-2">
+                    <!-- CORRELATION MATRIX -->
+                    <h4>RELATIONSHIP IMPORTANCE</h4>
+                    <img src="../static/correlation.png" class="img-thumbnail bg-transparent" alt="correlation matrix" id="correlation">
+                </div>
+                <div class="col flex-column col-5 mb-1 me-2">
+                    <!-- HISTOGRAMS -->
+                    <h4>SCORE DISTRIBUTION</h4>
+                    <div>
+                        <ul class="nav nav-tabs nav-justified text-info-emphasis" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link active" data-bs-toggle="tab" role="tab" tabindex="-1" href="#gre">by GRE</a>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link" data-bs-toggle="tab" role="tab" tabindex="-1" href="#cgpa">by CGPA</a>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link" data-bs-toggle="tab" role="tab" tabindex="-1" href="#sop">by SOP</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="tab-content align-content-center justify-content-evenly" id="histTabs">
+                        <div id="gre" class="tab-pane fade active show" role="tabpanel">
+                            <img src="../static/gre_hist.png" class="img-thumbnail bg-transparent" alt="gre histogram" id="gre_hist">
                         </div>
-                        <div class="tab-content align-content-center justify-content-evenly" id="histTabs">
-                            <div id="gre" class="tab-pane fade active show" role="tabpanel">
-                                <img src="../static/gre_hist.png" class="img-thumbnail bg-transparent" alt="gre histogram" id="gre_hist">
-                            </div>
-                            <div id="cgpa" class="tab-pane fade" role="tabpanel">
-                                <img src="../static/cgpa_hist.png" class="img-thumbnail bg-transparent" alt="cgpa histogram" id="cgpa_hist">
-                            </div>
-                            <div id="sop" class="tab-pane fade" role="tabpanel">
-                                <img src="../static/sop_hist.png" class="img-thumbnail bg-transparent" alt="sop histogram" id="sop_hist">
-                            </div>
+                        <div id="cgpa" class="tab-pane fade" role="tabpanel">
+                            <img src="../static/cgpa_hist.png" class="img-thumbnail bg-transparent" alt="cgpa histogram" id="cgpa_hist">
                         </div>
-                    </td>
-                </tr>
-                <tr class="row my-auto pb-4 d-flex flex-row justify-content-evenly overflow-y-hidden flex-fill" >
-                    <td class="col-5 my-3 mx-2">
-                        <!-- CORRELATION MATRIX -->
-                        <h4>RELATIONSHIPS BETWEEN SCORES AND DECISION</h4>
-                        <img src="../static/correlation.png" class="img-thumbnail bg-transparent" alt="correlation matrix" id="correlation">
-                    </td>
-                    <td class="col flex-column col-5 pb-4">
-                        <!-- PIE CHART -->
-                        <h4>DECISION DISTRIBUTION</h4>
-                        <img src="../static/decision_pie.png" class="img-thumbnail bg-transparent" alt="pie chart" id="pie">
-                    </td>
-                </tr>
-            </table>
+                        <div id="sop" class="tab-pane fade" role="tabpanel">
+                            <img src="../static/sop_hist.png" class="img-thumbnail bg-transparent" alt="sop histogram" id="sop_hist">
+                        </div>
+                    </div>
+                </div>
+                <div class="col flex-column col-5">
+                    <!-- PIE CHART -->
+                    <h4>ADMITTANCE RATE</h4>
+                    <img src="../static/decision_pie.png" class="img-thumbnail bg-transparent" alt="pie chart" id="pie">
+                </div>
+                <div class="col flex-column col-4" >
+                    <!-- SCATTERPLOT -->
+                    <h4>SCORES BY DECISION</h4>
+                    <img src="../static/scatterplot.png" class="img-thumbnail bg-transparent" alt="scatterplot" id="scatterplot">
+                </div>
+            </div>
         </div>
     </div>
 
 
-    <!-- REFRESH DASHBOARD AFTER NEW DATA UPLOAD -->
+    <!-- REFRESH DASHBOARD CHARTS AFTER NEW DATA UPLOAD -->
     <script>
         function refreshCharts() {
             let scatterplot = document.getElementById('scatterplot');
@@ -98,14 +93,16 @@
             let cgpa_hist = document.getElementById('cgpa_hist');
             let sop_hist = document.getElementById('sop_hist');
             let correlation = document.getElementById('correlation')
-            scatterplot.src = '../static/scatterplot.png';
-            pie.src = '../static/decision_pie.png';
-            gre_hist.src = '../static/gre_hist.png';
-            cgpa_hist.src = '../static/cgpa_hist.png';
-            sop_hist.src = '../static/sop_hist.png';
-            correlation.src = '../static/correlation.png';
-            window.location.reload();
-        }
+
+            let time = new Date().getTime();
+
+            scatterplot.src = '../static/scatterplot.png?' + time;
+            pie.src = '../static/decision_pie.png?' + time;
+            gre_hist.src = '../static/gre_hist.png?' + time;
+            cgpa_hist.src = '../static/cgpa_hist.png?' + time;
+            sop_hist.src = '../static/sop_hist.png?' + time;
+            correlation.src = '../static/correlation.png?' + time;
+            }
     </script>
 
 
